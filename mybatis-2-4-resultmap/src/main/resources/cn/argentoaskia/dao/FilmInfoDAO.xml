@@ -1,0 +1,59 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.argentoaskia.dao.FilmInfoDAO" >
+    <resultMap id="filmInfo" type="cn.argentoaskia.beans.FilmInfo">
+        <result column="film_id" property="filmId"/>
+        <result column="title" property="filmTitle"/>
+        <result column="description" property="filmDesc"/>
+        <result column="first_name" property="filmActorFirstName"/>
+        <result column="last_name" property="filmActorLastName"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="filmInfo">
+        SELECT ft.film_id, ft.title, ft.description, a.first_name, a.last_name
+        FROM film_text ft JOIN film_actor fa on ft.film_id = fa.film_id
+                          JOIN actor a on a.actor_id = fa.actor_id
+    </select>
+    <select id="selectAll2" resultType="cn.argentoaskia.beans.FilmInfo">
+        SELECT ft.film_id AS filmId,
+               ft.title AS filmTitle,
+               ft.description AS filmDesc,
+               a.first_name AS filmActorFirstName,
+               a.last_name AS filmActorLastName
+        FROM film_text ft JOIN film_actor fa on ft.film_id = fa.film_id
+                          JOIN actor a on a.actor_id = fa.actor_id
+    </select>
+
+    <!-- 并没有配置title和description，这两个字段因为和查询出来的二维表名字相同，会进行自动映射 -->
+    <resultMap id="filmInfoBean" type="cn.argentoaskia.beans.FilmInfoBean"
+    autoMapping="true">
+        <id column="film_id" property="id"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+    </resultMap>
+    <select id="selectAll3" resultMap="filmInfoBean">
+        SELECT ft.film_id, ft.title, ft.description, a.first_name, a.last_name
+        FROM film_text ft JOIN film_actor fa on ft.film_id = fa.film_id
+                          JOIN actor a on a.actor_id = fa.actor_id
+        LIMIT 2,10
+    </select>
+
+    <!-- extends -->
+    <resultMap id="filmTextActor" type="cn.argentoaskia.beans.FilmTextActor"
+    extends="cn.argentoaskia.dao.FilmTextDAOResultMap.filmText">
+        <result column="actor_id" property="actorId"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="last_update" property="lastUpdate"/>
+    </resultMap>
+    <select id="selectAll4" resultMap="filmTextActor">
+        SELECT ft.film_id, ft.title, ft.description, a.actor_id ,
+               a.first_name, a.last_name, a.last_update
+        FROM film_text ft JOIN film_actor fa on ft.film_id = fa.film_id
+                          JOIN actor a on a.actor_id = fa.actor_id
+        LIMIT 2,10
+    </select>
+
+
+</mapper>
