@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.argentoaskia.dao.FirstCacheDAO" >
+    <resultMap id="filmTextBean" type="cn.argentoaskia.beans.FilmTextBean">
+        <result column="film_id" property="filmId"/>
+        <result column="title" property="filmTitle"/>
+        <result column="description" property="filmDesc"/>
+    </resultMap>
+
+    <select id="selectAllByFilmId" resultMap="filmTextBean">
+        SELECT ft.film_id, ft.title, ft.description
+        FROM film_text ft
+        WHERE ft.film_id = #{id}
+    </select>
+    <!-- 加上flushcache将会在查询完之后自动清除缓存 -->
+    <select id="selectAllByFilmIdWithNoCache" resultMap="filmTextBean" flushCache="true">
+        SELECT ft.film_id, ft.title, ft.description
+        FROM film_text ft
+        WHERE ft.film_id = #{id}
+    </select>
+</mapper>
