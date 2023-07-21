@@ -34,7 +34,7 @@ public interface FilmTextDAOParameter {
     Integer insert(FilmTextOrigin2 filmTextOrigin2);
 
     /**
-     * 单个参数 + 实体类(POJO)情况下，如果想写符合我们习惯上的写法，如#{实体类对象.字段名的}，则需要指定parameterType属性。
+     * 单个参数 + 实体类(POJO)情况下，如果想写符合我们习惯上的写法，如#{实体类对象.字段名的}，则需要指定parameterType属性(部分mybatis版本可以不指定)。
      * 这种写法同时还需要给参数进行@Param命名
      * @param filmTextOrigin2
      * @return

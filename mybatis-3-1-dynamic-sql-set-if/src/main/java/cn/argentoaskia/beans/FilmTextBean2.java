@@ -1,5 +1,8 @@
 package cn.argentoaskia.beans;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+
 public class FilmTextBean2 {
     private Integer filmId;
     private String filmTitle;

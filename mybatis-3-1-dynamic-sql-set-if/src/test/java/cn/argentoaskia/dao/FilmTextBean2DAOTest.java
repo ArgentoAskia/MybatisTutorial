@@ -36,4 +36,12 @@ public class FilmTextBean2DAOTest {
         Integer update = mapper.update(filmTextBean2);
         System.out.println(update);
     }
+    @Test
+    public void testDynamicUpdate2(){
+        FilmTextBean2 filmTextBean2 = new FilmTextBean2();
+        filmTextBean2.setFilmId(1000)
+                .setFilmTitle("test");
+        Integer update = mapper.update2(filmTextBean2);
+        System.out.println(update);
+    }
 }
