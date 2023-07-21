@@ -38,6 +38,7 @@
         <module>mybatis-5-5-dirty-data</module>
         <module>mybatis-8-1-mybatis-spring</module>
         <module>mybatis-8-2-mybatis-springboot</module>
+        <module>mybatis-9-transaction</module>
     </modules>
 
     <properties>

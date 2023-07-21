@@ -6,17 +6,13 @@
         INSERT INTO film_text
         VALUES(#{film_id}, #{title}, #{description})
     </insert>
-    <insert id="insert3" parameterType="cn.argentoaskia.beans.FilmTextOrigin2">
+    <insert id="insert3">
         INSERT INTO film_text
         VALUES(#{filmTextOrigin2.film_id}, #{filmTextOrigin2.title}, #{filmTextOrigin2.description})
     </insert>
     <insert id="insert2">
        INSERT INTO film_text
        VALUES(#{id}, #{title}, #{desc})
-    </insert>
-    <insert id="insert4" parameterType="cn.argentoaskia.beans.FilmTextOrigin2">
-        INSERT INTO film_text
-        VALUES(#{_parameter.film_id}, #{_parameter.title}, #{_parameter.description})
     </insert>
     <update id="update">
         UPDATE film_text
