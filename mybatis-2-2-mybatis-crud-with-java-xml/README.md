@@ -10,25 +10,34 @@
 
 特别注意：本章节配置的是`Mybatis`的`Mapper`文件，也就是写`SQL`的地方，而`mybatis-config`文件是配置`Mybatis`框架的地方！区别开来！
 
-无论哪种配置方式都需要先配置好`Mybatis-config`！因为`Mybatis-config`里面有一个`Mappers`标签，用于告诉`Mybatis`，`mapper`文件的位置，如果不指定的话，`Mybatis`框架无法，具体这个属性的配置方法可以参考这里，为了省时间，简单说明下：
+无论哪种配置方式都需要先配置好`Mybatis-config`！因为`Mybatis-config`里面有一个`Mappers`标签，用于告诉`Mybatis`，`mapper`文件或者`DAO`的位置，如果不指定的话，`Mybatis`框架无法找到`DAO`或者`Mapper`文件，具体这个属性的配置写法可以参考[这里](https://github.com/ArgentoAskia/MybatisTutorial/tree/master/mybatis-2-1-mybatis-config-with-java-xml#mappers%E6%A0%87%E7%AD%BE)，下面列出工程中的配置方法参考：
 
-目录结构
+项目结构：
 
-如果是基于`XML`的`Mapper`配置方式：则`Mapper`标签可以这样写：
+![image-20230721104614157](README/image-20230721104614157.png)
+
+基于`XML`的`Mapper`配置方式：`Mapper`标签可以这样写：
 
 ```xml
-<!-- resource写法通用，写mapper的xml位置 -->
+<!-- resource写法通用，写mapper的xml位置，因为mapper中有namespace属性，
+可以绑定到具体的DAO-->
 <mapper resource="cn/argentoaskia/dao/FilmTextDAOXMLMapper.xml"/>
+
 <!-- 
-如果写DAO接口的全限定类名的话则要求对应的FilmTextDAOXMLMapper.xml要和FilmTextDAOXML同包同名，
+如果写DAO接口的全限定类名的话则要求FilmTextDAOXMLMapper.xml要和FilmTextDAOXML类同包同名，
 如这两个文件的位置：
+
 FilmTextDAOXML.java: src/main/java/cn/argentoaskia/dao/FilmTextDAOXML.java
-FilmTextDAOXMLMapper.xml:名字要改成FilmTextDAOXML.xml，并且放在：src/main/resources/cn/argentoaskia/dao/FilmTextDAOXML.xml
+
+FilmTextDAOXMLMapper.xml:名字要改成FilmTextDAOXML.xml，
+并且放在：src/main/resources/cn/argentoaskia/dao/FilmTextDAOXML.xml
+
+才可以写下面这种方式
 -->
 <mapper class="cn.argentoaskia.dao.FilmTextDAOXML"/>
 ```
 
-如果是基于注解的`Mapper`和`Provider`的配置，则只需要些写`class`即可，如：
+如果是基于注解的`Mapper`和`Provider`的配置，则只需要写`class`即可，`class`属性写`DAO`接口的全限定类名如：
 
 ```xml
 <mapper class="cn.argentoaskia.dao.FilmTextDAOAnnotation"/>
@@ -63,20 +72,21 @@ FilmTextDAOXMLMapper.xml:名字要改成FilmTextDAOXML.xml，并且放在：src/
 
 上面的接口定义了基本的`CRUD`方法，查询全部，主键唯一查询，插入，删除，修改等。
 
-那么重点就在这个`Mapper`文件的编写了，一般情况下，`Mapper`文件的内容都是根据`DAO`接口来的，`Mapper`文件的框架如下：
+那么重点就在这个`Mapper`文件的编写了，一般情况下，`Mapper`文件的内容都是根据`DAO`接口来的，`Mapper`文件的框架如下（可以复制下面框架做成`idea`的`live template`）：
 
 ```xml
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <!-- 基本CRUD,XML形式配置——Mapper -->
+<!-- namespace属性用于绑定具体的DAO接口 -->
 <mapper namespace="$END$">
     
 </mapper>
 <!-- 同样可以把这个做成live template -->
 ```
 
-其中`namespace`属性指定的是`DAO`接口的全限定类名，一般在`idea`中选中类右键，`copy`，`copy Reference`即可。
+其中`namespace`属性指定的是`DAO`接口的全限定类名，一般在`idea`中选中`DAO`类右键，`copy`，`copy Reference`即可。
 
 在`mapper`标签下，根据`SQL`语句的类型，分了四个小标签，分别代表增删改查的`SQL`：
 
@@ -101,7 +111,7 @@ FilmTextDAOXMLMapper.xml:名字要改成FilmTextDAOXML.xml，并且放在：src/
 </mapper>
 ```
 
-其中`id`代表`DAO`接口的方法名，`resultType`代表返回值类型或者返回值类型的原始类型（数组、`List`、`Set`等则只需要填写其对应的类型就好，一般这个类型叫原始类型）。这些属性都会在这个章节里面有介绍。
+其中`id`代表`DAO`接口的方法名，`resultType`代表返回值类型或者返回值类型的原始类型（数组、`List`、`Set`等则只需要填写其对应的非数组类型（`ComponentType`）就好，一般这个类型也叫原始类型）。
 
 上面的`DAO`接口完整的`Mapper`长这样：
 
@@ -149,7 +159,7 @@ FilmTextDAOXMLMapper.xml:名字要改成FilmTextDAOXML.xml，并且放在：src/
 
 ## 基于注解的配置方式
 
-基于注解的方式则无需要写具体的`Mapper`，可以当作`Mapper`和`DAO`放在同一个地方了，只需要在DAO接口方法上标记相应的注解即可。
+基于注解的方式则无需要写具体的`Mapper`，可以当作`Mapper`和`DAO`放在同一个地方了，只需要在`DAO`接口方法上标记相应的注解即可。
 
 - `SELECT`语句：`@Select`
 - `INSERT`语句：`@Insert`
@@ -161,7 +171,7 @@ FilmTextDAOXMLMapper.xml:名字要改成FilmTextDAOXML.xml，并且放在：src/
 
 ## 基于Provider的配置方式
 
-`mybatis`的使用原则上了解前面两种配置方式就够了，但是为了满足一些特殊的要求，但当你需要对返回的结果进行一些自己的处理，比如作筛选或者一些名称的替换等，则可以采用这种配置方式。
+`mybatis`的使用原则上了解前面两种配置方式就够了，但是为了满足一些特殊的要求，比如当你需要对返回的结果进行一些自己的处理（筛选或者做一些名称的替换等），则可以采用这种配置方式。
 
 在`Mybatis`中，有一个接口叫`ProviderMethodResolver`可以帮助更好地实现`Provider`的配置方式，当然也可以不用这个接口。
 
@@ -255,9 +265,9 @@ public class FilmTextDAOProvider implements ProviderMethodResolver {
 }
 ```
 
-这个`Provider`类的编写涉及到`Mybatis`的`SqlBuilder API`，也就是那个`new SQL()`，类似于在Java代码里面写`Sql`，很方便的。这个在后面介绍`Mybatis`的`Api`的时候会和大家说明，当然大家也可以参考下`Mybatis`中文网：[传送门](https://mybatis.org/mybatis-3/zh/statement-builders.html)
+这个`Provider`类的编写涉及到`Mybatis`的`SqlBuilder API`，也就是那个`new SQL()`，类似于在`Java`代码里面写`Sql`，很方便的。这个在后面介绍`Mybatis`的`Api`的时候会和大家说明，当然大家也可以参考下`Mybatis`中文网：[传送门](https://mybatis.org/mybatis-3/zh/statement-builders.html)
 
-这个`Provider`类也可以不实现`ProviderMethodResolver`接口：
+这个`Provider`类也可以不实现`ProviderMethodResolver`接口，但后期在使用`@XXXProvider`的时候需要指定`method`属性
 
 ```java
 public class FilmTextDAOProvider2 {
@@ -337,6 +347,6 @@ public class FilmTextDAOProvider2 {
 
 ![image-20230206152729840](README/image-20230206152729840.png)
 
-如果实现了`ProviderMethodResolver`接口的话，则只需要指定`Provider`类的`class`对象即可，`Mybatis`会根据`DAO`接口方法的方法名来匹配对应的`Provider`类的方法，`Provider`类和`DAO`接口中同名的方法将会绑定在一起。
+- 如果实现了`ProviderMethodResolver`接口的话，则只需要指定`Provider`类的`class`对象即可，`Mybatis`会根据`DAO`接口方法的方法名来匹配对应的`Provider`类的方法，`Provider`类和`DAO`接口中同名的方法将会绑定在一起。
 
-不实现`ProviderMethodResolver`接口，或者`Provider`类中方法名和`DAO`接口中的不一致的时候，则需要在`@XXXXProvider`注解中**额外指定**`method`**属性作为绑定**。
+- 不实现`ProviderMethodResolver`接口，或者`Provider`类中方法名和`DAO`接口中的不一致的时候，则需要在`@XXXXProvider`注解中**额外指定**`method`**属性作为绑定**。
